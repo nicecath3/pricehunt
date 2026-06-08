@@ -208,8 +208,8 @@ function AlertDropdownItem({
           </div>
         ) : (
           <div className={styles.priceRow}>
+            <span className={styles.dropdownPriceLabel}>목표가</span>
             <span className={styles.dropdownPrice}>₩{alert.targetPrice.toLocaleString()}</span>
-            <span className={styles.discountBadge}>-{discountRate}%</span>
             <button className={styles.editBtn} onClick={handleEditStart}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round"/>

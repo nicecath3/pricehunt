@@ -285,6 +285,13 @@
   gap: 7px;
 }
 
+.dropdownPriceLabel {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
 .dropdownPrice {
   font-size: 14px;
   color: #818CF8;
