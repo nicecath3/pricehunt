@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "./AlertModal.module.scss";
 import type { Product, AlertFormData } from "@/types";
 import { validateEmail, validatePhone } from "@/lib/validate";
+import { saveAlert } from "@/lib/alertStorage";
 
 interface AlertModalProps {
   product: Product;
@@ -74,6 +75,17 @@ export default function AlertModal({ product, onClose }: AlertModalProps) {
         return;
       }
     }
+
+    saveAlert({
+      productId: product.id,
+      productTitle: product.title,
+      productImage: product.image,
+      currentPrice: product.currentPrice,
+      targetPrice: targetNum,
+      notifyMethod: notifyMethod as "email" | "message",
+      contact: notifyMethod === "email" ? email : phone,
+      status: "waiting",
+    });
 
     setSubmitted(true);
   };

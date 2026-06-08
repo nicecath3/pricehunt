@@ -84,3 +84,18 @@ export interface AlertFormData {
   notifyPush: boolean;
   email: string;
 }
+
+export type AlertStatus = "waiting" | "done";
+
+export interface AlertRecord {
+  id: string;
+  productId: string;
+  productTitle: string;
+  productImage: string;
+  currentPrice: number;
+  targetPrice: number;
+  notifyMethod: "email" | "message";
+  contact: string; // email or phone
+  registeredAt: string; // ISO string
+  status: AlertStatus;
+}
