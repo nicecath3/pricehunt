@@ -1,0 +1,304 @@
+@use '@/styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal {
+  background: $color-surface;
+  border-radius: $radius-xl;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: $shadow-xl;
+  animation: slideUp 0.2s ease;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 20px 0;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.subtitle {
+  font-size: 0.82rem;
+  color: $color-text-muted;
+  margin-top: 2px;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-md;
+  color: $color-text-secondary;
+  @include transition;
+
+  &:hover { background: $color-bg; }
+}
+
+.productInfo {
+  margin: 14px 20px;
+  padding: 12px 14px;
+  background: $color-bg;
+  border-radius: $radius-md;
+}
+
+.productName {
+  font-size: 0.85rem;
+  color: $color-text;
+  font-weight: 600;
+  @include line-clamp(2);
+  margin-bottom: 4px;
+}
+
+.productPrice {
+  font-size: 0.82rem;
+  color: $color-text-secondary;
+
+  strong {
+    color: $color-text;
+    font-family: $font-mono;
+  }
+}
+
+.form {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $color-text;
+}
+
+.priceInputWrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+  @include transition(border-color);
+
+  &:focus-within { border-color: $color-primary; box-shadow: 0 0 0 3px rgba($color-primary, 0.1); }
+}
+
+.priceInput {
+  flex: 1;
+  height: 42px;
+  padding: 0 12px;
+  font-size: 0.95rem;
+  font-family: $font-mono;
+  color: $color-text;
+  background: transparent;
+  border: none;
+}
+
+.priceUnit {
+  padding: 0 12px;
+  font-size: 0.88rem;
+  color: $color-text-secondary;
+  background: $color-bg;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid $color-border;
+}
+
+.discountHint {
+  font-size: 0.8rem;
+  color: $color-success;
+  font-weight: 500;
+}
+
+.checkGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: $color-text;
+
+  input[type="radio"] { display: none; }
+
+  input:checked + .radioCircle {
+    border-color: $color-primary;
+
+    &::after { opacity: 1; }
+  }
+}
+
+.radioCircle {
+  width: 18px;
+  height: 18px;
+  border: 2px solid $color-border;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  @include transition;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $color-primary;
+    opacity: 0;
+    @include transition;
+  }
+}
+
+.successContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 24px 28px;
+  gap: 12px;
+  text-align: center;
+
+  .submitBtn {
+    width: 100%;
+    flex: none;
+    margin-top: 8px;
+  }
+}
+
+.successIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba($color-primary, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.successTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.successDesc {
+  font-size: 0.88rem;
+  color: $color-text-secondary;
+  line-height: 1.6;
+
+  strong {
+    color: $color-text;
+    font-family: $font-mono;
+  }
+}
+
+.textInput {
+  height: 42px;
+  padding: 0 12px;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  color: $color-text;
+  @include transition(border-color);
+
+  &::placeholder { color: $color-text-muted; }
+  &:focus { border-color: $color-primary; box-shadow: 0 0 0 3px rgba($color-primary, 0.1); }
+
+  &.inputError {
+    border-color: $color-danger;
+    &:focus { box-shadow: 0 0 0 3px rgba($color-danger, 0.1); }
+  }
+}
+
+.fieldError {
+  font-size: 0.78rem;
+  color: $color-danger;
+  margin-top: 2px;
+}
+
+.error {
+  font-size: 0.82rem;
+  color: $color-danger;
+  padding: 8px 12px;
+  background: $color-danger-light;
+  border-radius: $radius-md;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.cancelBtn {
+  flex: 1;
+  height: 42px;
+  border: 1.5px solid $color-border;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-text-secondary;
+  @include transition;
+
+  &:hover { background: $color-bg; }
+}
+
+.submitBtn {
+  flex: 2;
+  width: 100%;
+  height: 42px;
+  background: $color-primary;
+  color: #fff;
+  border-radius: $radius-md;
+  font-size: 0.9rem;
+  font-weight: 700;
+  @include transition(background);
+
+  &:hover { background: $color-primary-dark; }
+}

@@ -1,0 +1,355 @@
+@use '@/styles/variables' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+
+  @include respond-to(md) { padding: 0; align-items: flex-end; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal {
+  background: $color-surface;
+  border-radius: $radius-xl;
+  width: 100%;
+  max-width: 900px;
+  max-height: calc(100vh - 40px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $shadow-xl;
+  animation: slideUp 0.25s ease;
+
+  @include respond-to(md) {
+    border-radius: $radius-xl $radius-xl 0 0;
+    max-height: 92vh;
+  }
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid $color-border;
+  flex-shrink: 0;
+}
+
+.headerInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.catTag {
+  display: inline-flex;
+  align-self: flex-start;
+  background: $color-primary-light;
+  color: $color-primary;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+}
+
+.modalTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $color-text;
+  line-height: 1.4;
+  @include line-clamp(2);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.alertBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  background: $color-primary;
+  color: #fff;
+  border-radius: $radius-full;
+  font-size: 0.85rem;
+  font-weight: 600;
+  @include transition(background);
+
+  &:hover { background: $color-primary-dark; }
+}
+
+.closeBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-md;
+  color: $color-text-secondary;
+  @include transition;
+
+  &:hover { background: $color-bg; color: $color-text; }
+}
+
+// ─── Body ────────────────────────────────────────────────────────────────────
+.modalBody {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+
+  @include respond-to(md) { flex-direction: column; overflow-y: auto; }
+}
+
+// ─── Left Panel ──────────────────────────────────────────────────────────────
+.leftPanel {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid $color-border;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+
+  @include respond-to(md) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid $color-border;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.imgWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: $radius-md;
+  overflow: hidden;
+  background: $color-bg;
+  flex-shrink: 0;
+
+  @include respond-to(md) { width: 100px; aspect-ratio: 1; }
+}
+
+.productImg {
+  object-fit: cover;
+}
+
+.metaList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.metaRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.metaLabel {
+  font-size: 0.78rem;
+  color: $color-text-muted;
+  white-space: nowrap;
+  padding-top: 1px;
+  min-width: 42px;
+}
+
+.metaValue {
+  font-size: 0.82rem;
+  color: $color-text-secondary;
+  font-weight: 500;
+}
+
+.buyBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  border-radius: $radius-md;
+  background: $color-success;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  @include transition(background);
+
+  &:hover { background: darken(#10B981, 8%); }
+
+  @include respond-to(md) { display: none; }
+}
+
+// ─── Right Panel ─────────────────────────────────────────────────────────────
+.rightPanel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include respond-to(md) { padding: 16px; }
+}
+
+// ─── Price Stats ─────────────────────────────────────────────────────────────
+.priceStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.statCard {
+  background: $color-bg;
+  border-radius: $radius-md;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  color: $color-text-muted;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: $color-text;
+  font-family: $font-mono;
+
+  &.low  { color: $color-success; }
+  &.high { color: $color-danger; }
+}
+
+.statChange {
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  &.down { color: $color-success; }
+  &.up   { color: $color-danger; }
+}
+
+.statSub {
+  font-size: 0.75rem;
+  color: $color-text-muted;
+}
+
+// ─── Chart ───────────────────────────────────────────────────────────────────
+.chartSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.chartWrap {
+  height: 160px;
+}
+
+// ─── Stores ──────────────────────────────────────────────────────────────────
+.storesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.storeList {
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.storeRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: 1px solid $color-border;
+  @include transition(background);
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: $color-bg; }
+
+  &.lowestRow { background: $color-success-light; }
+}
+
+.storeName {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: $color-text;
+  font-weight: 500;
+}
+
+.lowestBadge {
+  background: $color-success;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: $radius-full;
+}
+
+.storePrice {
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: $font-mono;
+  color: $color-text;
+
+  &.lowestPrice { color: $color-success; }
+}
+
+.storeLink {
+  font-size: 0.78rem;
+  color: $color-primary;
+  font-weight: 600;
+  padding: 3px 8px;
+  border: 1px solid rgba($color-primary, 0.3);
+  border-radius: $radius-sm;
+  @include transition;
+
+  &:hover {
+    background: $color-primary;
+    color: #fff;
+    border-color: $color-primary;
+  }
+}
