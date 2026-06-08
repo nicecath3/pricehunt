@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.101.0",
     "chart.js": "^4.4.3",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "jotai": "^2.20.0",
     "next": "14.2.5",
     "nodemailer": "^6.9.14",
     "react": "^18",
