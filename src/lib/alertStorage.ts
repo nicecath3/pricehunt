@@ -1,6 +1,11 @@
 import type { AlertRecord } from "@/types";
 
 const KEY = "pricehunt_alerts";
+export const ALERT_CHANGE_EVENT = "pricehunt_alert_change";
+
+function dispatch() {
+  window.dispatchEvent(new Event(ALERT_CHANGE_EVENT));
+}
 
 export function getAlerts(): AlertRecord[] {
   if (typeof window === "undefined") return [];
@@ -11,7 +16,9 @@ export function getAlerts(): AlertRecord[] {
   }
 }
 
-export function saveAlert(record: Omit<AlertRecord, "id" | "registeredAt">): AlertRecord {
+export function saveAlert(
+  record: Omit<AlertRecord, "id" | "registeredAt">,
+): AlertRecord {
   const alerts = getAlerts();
   const newRecord: AlertRecord = {
     ...record,
@@ -19,20 +26,26 @@ export function saveAlert(record: Omit<AlertRecord, "id" | "registeredAt">): Ale
     registeredAt: new Date().toISOString(),
   };
   localStorage.setItem(KEY, JSON.stringify([newRecord, ...alerts]));
+  dispatch();
   return newRecord;
 }
 
 export function deleteAlert(id: string): void {
   const alerts = getAlerts().filter((a) => a.id !== id);
   localStorage.setItem(KEY, JSON.stringify(alerts));
+  dispatch();
+}
+
+export function updateAlertTargetPrice(id: string, targetPrice: number): void {
+  const alerts = getAlerts().map((a) =>
+    a.id === id ? { ...a, targetPrice } : a,
+  );
+  localStorage.setItem(KEY, JSON.stringify(alerts));
+  dispatch();
 }
 
 export function updateAlertStatus(id: string, status: AlertRecord["status"]): void {
   const alerts = getAlerts().map((a) => (a.id === id ? { ...a, status } : a));
   localStorage.setItem(KEY, JSON.stringify(alerts));
-}
-
-export function updateAlertTargetPrice(id: string, targetPrice: number): void {
-  const alerts = getAlerts().map((a) => (a.id === id ? { ...a, targetPrice } : a));
-  localStorage.setItem(KEY, JSON.stringify(alerts));
+  dispatch();
 }

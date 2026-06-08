@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import type { AlertRecord } from "@/types";
-import { getAlerts, deleteAlert as deleteAlertStorage, updateAlertTargetPrice } from "@/lib/alertStorage";
+import { getAlerts, deleteAlert as deleteAlertStorage, updateAlertTargetPrice, ALERT_CHANGE_EVENT } from "@/lib/alertStorage";
 
 export function useAlerts() {
   const [alerts, setAlerts] = useState<AlertRecord[]>([]);
@@ -12,9 +12,14 @@ export function useAlerts() {
 
   useEffect(() => {
     reload();
-    // storage 이벤트: 다른 탭에서 변경될 때도 반영
+    // storage 이벤트: 다른 탭에서 변경될 때 반영
     window.addEventListener("storage", reload);
-    return () => window.removeEventListener("storage", reload);
+    // 커스텀 이벤트: 같은 탭에서 변경될 때 반영
+    window.addEventListener(ALERT_CHANGE_EVENT, reload);
+    return () => {
+      window.removeEventListener("storage", reload);
+      window.removeEventListener(ALERT_CHANGE_EVENT, reload);
+    };
   }, [reload]);
 
   const deleteAlert = useCallback(
