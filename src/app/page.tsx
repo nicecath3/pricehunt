@@ -17,6 +17,7 @@ export default function Home() {
   const t = searchParams.get("t") ?? "마우스";
   const s = searchParams.get("s") ?? "sim";
 
+  // 커밋용
   const {
     productList,
     total,
