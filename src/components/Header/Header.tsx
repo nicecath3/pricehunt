@@ -14,7 +14,7 @@ export default function Header() {
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { alerts, deleteAlert, updateTargetPrice } = useAlerts();
+  const { alerts, deleteAlert } = useAlerts();
   const waitingCount = alerts.filter((a) => a.status === "waiting").length;
 
   useEffect(() => {
@@ -119,7 +119,6 @@ export default function Header() {
                       key={alert.id}
                       alert={alert}
                       onDelete={deleteAlert}
-                      onUpdatePrice={updateTargetPrice}
                     />
                   ))}
                 </ul>
@@ -136,38 +135,10 @@ export default function Header() {
 function AlertDropdownItem({
   alert,
   onDelete,
-  onUpdatePrice,
 }: {
   alert: AlertRecord;
   onDelete: (id: string) => void;
-  onUpdatePrice: (id: string, price: number) => void;
 }) {
-  const [editing, setEditing] = useState(false);
-  const [inputVal, setInputVal] = useState(alert.targetPrice.toLocaleString());
-
-  const handleEditStart = () => {
-    setInputVal(alert.targetPrice.toLocaleString());
-    setEditing(true);
-  };
-
-  const handleSave = () => {
-    const num = parseInt(inputVal.replace(/,/g, ""), 10);
-    if (!num || num <= 0) return;
-    if (num >= alert.currentPrice) {
-      alert && window.alert("목표가는 현재가보다 낮아야 합니다.");
-      return;
-    }
-    onUpdatePrice(alert.id, num);
-    setEditing(false);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") handleSave();
-    if (e.key === "Escape") setEditing(false);
-  };
-
-  const discountRate = Math.round((1 - alert.targetPrice / alert.currentPrice) * 100);
-
   const openLink = () => window.open(alert.productLink, "_blank");
 
   return (
@@ -192,37 +163,10 @@ function AlertDropdownItem({
           <span className={styles.dropdownContact}>{alert.contact}</span>
         </div>
 
-        {/* 목표가 영역 */}
-        {editing ? (
-          <div className={styles.editRow}>
-            <span className={styles.editUnit}>₩</span>
-            <input
-              className={styles.editInput}
-              value={inputVal}
-              autoFocus
-              inputMode="numeric"
-              onChange={(e) => {
-                const raw = e.target.value.replace(/[^0-9]/g, "");
-                setInputVal(raw ? parseInt(raw).toLocaleString() : "");
-              }}
-              onKeyDown={handleKeyDown}
-            />
-            <button className={styles.editSave} onClick={handleSave}>저장</button>
-            <button className={styles.editCancel} onClick={() => setEditing(false)}>✕</button>
-          </div>
-        ) : (
-          <div className={styles.priceRow}>
-            <span className={styles.dropdownPriceLabel}>목표가</span>
-            <span className={styles.dropdownPrice}>₩{alert.targetPrice.toLocaleString()}</span>
-            <button className={styles.editBtn} onClick={handleEditStart}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              수정
-            </button>
-          </div>
-        )}
+        <div className={styles.priceRow}>
+          <span className={styles.dropdownPriceLabel}>목표가</span>
+          <span className={styles.dropdownPrice}>₩{alert.targetPrice.toLocaleString()}</span>
+        </div>
       </div>
 
       <button
