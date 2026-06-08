@@ -22,6 +22,7 @@ export default function Header() {
   const [hasMoreBelow, setHasMoreBelow] = useState(false);
 
   useEffect(() => {
+    if (!dropdownOpen) return;
     const el = listRef.current;
     if (!el) return;
     const check = () =>
@@ -29,9 +30,10 @@ export default function Header() {
     check();
     el.addEventListener("scroll", check);
     return () => el.removeEventListener("scroll", check);
-  }, [alerts]);
+  }, [dropdownOpen, alerts]);
 
   useEffect(() => {
+    if (!dropdownOpen) return;
     const el = listRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
@@ -40,7 +42,7 @@ export default function Header() {
     };
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => el.removeEventListener("wheel", onWheel);
-  }, [alerts]);
+  }, [dropdownOpen, alerts]);
 
   const onListMouseDown = (e: React.MouseEvent) => {
     const el = listRef.current;
