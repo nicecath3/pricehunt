@@ -31,3 +31,8 @@ export function updateAlertStatus(id: string, status: AlertRecord["status"]): vo
   const alerts = getAlerts().map((a) => (a.id === id ? { ...a, status } : a));
   localStorage.setItem(KEY, JSON.stringify(alerts));
 }
+
+export function updateAlertTargetPrice(id: string, targetPrice: number): void {
+  const alerts = getAlerts().map((a) => (a.id === id ? { ...a, targetPrice } : a));
+  localStorage.setItem(KEY, JSON.stringify(alerts));
+}

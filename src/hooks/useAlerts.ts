@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import type { AlertRecord } from "@/types";
-import { getAlerts, deleteAlert as deleteAlertStorage } from "@/lib/alertStorage";
+import { getAlerts, deleteAlert as deleteAlertStorage, updateAlertTargetPrice } from "@/lib/alertStorage";
 
 export function useAlerts() {
   const [alerts, setAlerts] = useState<AlertRecord[]>([]);
@@ -25,5 +25,13 @@ export function useAlerts() {
     [reload],
   );
 
-  return { alerts, deleteAlert, reload };
+  const updateTargetPrice = useCallback(
+    (id: string, price: number) => {
+      updateAlertTargetPrice(id, price);
+      reload();
+    },
+    [reload],
+  );
+
+  return { alerts, deleteAlert, updateTargetPrice, reload };
 }
