@@ -92,6 +92,7 @@ export interface AlertRecord {
   productId: string;
   productTitle: string;
   productImage: string;
+  productLink: string;
   currentPrice: number;
   targetPrice: number;
   notifyMethod: "email" | "message";

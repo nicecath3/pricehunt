@@ -168,6 +168,8 @@ function AlertDropdownItem({
 
   const discountRate = Math.round((1 - alert.targetPrice / alert.currentPrice) * 100);
 
+  const openLink = () => window.open(alert.productLink, "_blank");
+
   return (
     <li className={styles.dropdownItem}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -175,11 +177,13 @@ function AlertDropdownItem({
         src={alert.productImage}
         alt={alert.productTitle}
         className={styles.dropdownThumb}
+        onClick={openLink}
+        style={{ cursor: "pointer" }}
         onError={(e) => { (e.target as HTMLImageElement).style.visibility = "hidden"; }}
       />
 
       <div className={styles.dropdownInfo}>
-        <p className={styles.dropdownName}>{alert.productTitle}</p>
+        <p className={styles.dropdownName} onClick={openLink} style={{ cursor: "pointer" }}>{alert.productTitle}</p>
 
         <div className={styles.dropdownMeta}>
           <span className={`${styles.dropdownMethod} ${alert.notifyMethod === "message" ? styles.sms : ""}`}>

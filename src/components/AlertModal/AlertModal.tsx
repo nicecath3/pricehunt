@@ -80,6 +80,7 @@ export default function AlertModal({ product, onClose }: AlertModalProps) {
       productId: product.id,
       productTitle: product.title,
       productImage: product.image,
+      productLink: product.link,
       currentPrice: product.currentPrice,
       targetPrice: targetNum,
       notifyMethod: notifyMethod as "email" | "message",
