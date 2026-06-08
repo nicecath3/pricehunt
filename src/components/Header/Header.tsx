@@ -17,13 +17,64 @@ export default function Header() {
   const { alerts, deleteAlert } = useAlerts();
   const waitingCount = alerts.filter((a) => a.status === "waiting").length;
 
+  const listRef = useRef<HTMLUListElement>(null);
+  const drag = useRef({ active: false, startY: 0, scrollTop: 0 });
+  const [hasMoreBelow, setHasMoreBelow] = useState(false);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const check = () =>
+      setHasMoreBelow(el.scrollTop + el.clientHeight < el.scrollHeight - 2);
+    check();
+    el.addEventListener("scroll", check);
+    return () => el.removeEventListener("scroll", check);
+  }, [alerts]);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      el.scrollTop += e.deltaY;
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [alerts]);
+
+  const onListMouseDown = (e: React.MouseEvent) => {
+    const el = listRef.current;
+    if (!el) return;
+    drag.current = { active: true, startY: e.clientY, scrollTop: el.scrollTop };
+    el.style.cursor = "grabbing";
+    el.style.userSelect = "none";
+  };
+
+  const onListMouseMove = (e: React.MouseEvent) => {
+    if (!drag.current.active) return;
+    const el = listRef.current;
+    if (!el) return;
+    el.scrollTop = drag.current.scrollTop - (e.clientY - drag.current.startY);
+  };
+
+  const onListMouseUp = () => {
+    drag.current.active = false;
+    const el = listRef.current;
+    if (!el) return;
+    el.style.cursor = "grab";
+    el.style.userSelect = "";
+  };
+
   useEffect(() => {
     setSearchText(searchParams.get("t") ?? "");
   }, [searchParams]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -58,9 +109,26 @@ export default function Header() {
 
         <form className={styles.searchForm} onSubmit={handleSubmit}>
           <div className={styles.searchWrap}>
-            <svg className={styles.searchIcon} width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
-              <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <svg
+              className={styles.searchIcon}
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+              <path
+                d="m21 21-4.35-4.35"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
             </svg>
             <input
               ref={inputRef}
@@ -71,14 +139,28 @@ export default function Header() {
               onChange={(e) => setSearchText(e.target.value)}
             />
             {searchText && (
-              <button type="button" className={styles.clearBtn} onClick={() => { setSearchText(""); inputRef.current?.focus(); }}>
+              <button
+                type="button"
+                className={styles.clearBtn}
+                onClick={() => {
+                  setSearchText("");
+                  inputRef.current?.focus();
+                }}
+              >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path
+                    d="M18 6 6 18M6 6l12 12"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </button>
             )}
           </div>
-          <button type="submit" className={styles.searchBtn}>검색</button>
+          <button type="submit" className={styles.searchBtn}>
+            검색
+          </button>
         </form>
 
         {/* 벨 아이콘 */}
@@ -88,40 +170,85 @@ export default function Header() {
             onClick={() => setDropdownOpen((v) => !v)}
             title="알림 내역"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M13.73 21a2 2 0 01-3.46 0" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M13.73 21a2 2 0 01-3.46 0"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
             {waitingCount > 0 && (
-              <span className={styles.bellBadge}>{waitingCount > 9 ? "9+" : waitingCount}</span>
+              <span className={styles.bellBadge}>
+                {waitingCount > 9 ? "9+" : waitingCount}
+              </span>
             )}
           </button>
 
           {dropdownOpen && (
             <div className={styles.dropdown}>
               <div className={styles.dropdownHeader}>
-                <span className={styles.dropdownTitle}>🔔 알림 내역</span>
-                <span className={styles.dropdownCount}>{alerts.length}개 등록됨</span>
+                <span className={styles.dropdownTitle}>🔔 알림 등록 내역</span>
+                <span className={styles.dropdownCount}>
+                  {alerts.length}개 등록됨
+                </span>
               </div>
 
               {alerts.length === 0 ? (
                 <div className={styles.dropdownEmpty}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" strokeLinecap="round" />
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"
+                      strokeLinecap="round"
+                    />
                     <path d="M13.73 21a2 2 0 01-3.46 0" strokeLinecap="round" />
                   </svg>
                   <p>등록된 알림이 없습니다</p>
                 </div>
               ) : (
-                <ul className={styles.dropdownList}>
-                  {alerts.map((alert) => (
-                    <AlertDropdownItem
-                      key={alert.id}
-                      alert={alert}
-                      onDelete={deleteAlert}
-                    />
-                  ))}
-                </ul>
+                <div className={`${styles.dropdownListWrap} ${hasMoreBelow ? styles.dropdownListFade : ""}`}>
+                  {hasMoreBelow && (
+                    <div className={styles.dropdownListHint}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                  <ul
+                    ref={listRef}
+                    className={styles.dropdownList}
+                    onMouseDown={onListMouseDown}
+                    onMouseMove={onListMouseMove}
+                    onMouseUp={onListMouseUp}
+                    onMouseLeave={onListMouseUp}
+                  >
+                    {alerts.map((alert) => (
+                      <AlertDropdownItem
+                        key={alert.id}
+                        alert={alert}
+                        onDelete={deleteAlert}
+                      />
+                    ))}
+                  </ul>
+                </div>
               )}
             </div>
           )}
@@ -150,14 +277,24 @@ function AlertDropdownItem({
         className={styles.dropdownThumb}
         onClick={openLink}
         style={{ cursor: "pointer" }}
-        onError={(e) => { (e.target as HTMLImageElement).style.visibility = "hidden"; }}
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.visibility = "hidden";
+        }}
       />
 
       <div className={styles.dropdownInfo}>
-        <p className={styles.dropdownName} onClick={openLink} style={{ cursor: "pointer" }}>{alert.productTitle}</p>
+        <p
+          className={styles.dropdownName}
+          onClick={openLink}
+          style={{ cursor: "pointer" }}
+        >
+          {alert.productTitle}
+        </p>
 
         <div className={styles.dropdownMeta}>
-          <span className={`${styles.dropdownMethod} ${alert.notifyMethod === "message" ? styles.sms : ""}`}>
+          <span
+            className={`${styles.dropdownMethod} ${alert.notifyMethod === "message" ? styles.sms : ""}`}
+          >
             {alert.notifyMethod === "email" ? "이메일" : "문자"}
           </span>
           <span className={styles.dropdownContact}>{alert.contact}</span>
@@ -165,7 +302,9 @@ function AlertDropdownItem({
 
         <div className={styles.priceRow}>
           <span className={styles.dropdownPriceLabel}>목표가</span>
-          <span className={styles.dropdownPrice}>₩{alert.targetPrice.toLocaleString()}</span>
+          <span className={styles.dropdownPrice}>
+            ₩{alert.targetPrice.toLocaleString()}
+          </span>
         </div>
       </div>
 
@@ -174,7 +313,14 @@ function AlertDropdownItem({
         onClick={() => onDelete(alert.id)}
         title="삭제"
       >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M18 6 6 18M6 6l12 12" strokeLinecap="round" />
         </svg>
       </button>
