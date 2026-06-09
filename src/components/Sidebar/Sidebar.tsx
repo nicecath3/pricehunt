@@ -79,18 +79,25 @@ export default function Sidebar({ categories = [] }: SidebarProps) {
 
   return (
     <aside className={styles.sidebar}>
-      {categories.length > 0 && (
-        <>
-          <section className={styles.section}>
-            <h3 className={styles.sectionTitle}>카테고리</h3>
-            <div className={`${styles.catListWrap} ${hasMoreBelow ? styles.catListFade : ""}`}>
-              {hasMoreBelow && (
-                <div className={styles.catListHint}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-              )}
+      <>
+        <section className={styles.section}>
+          <h3 className={styles.sectionTitle}>카테고리</h3>
+          <div
+            className={`${styles.catListWrap} ${hasMoreBelow ? styles.catListFade : ""}`}
+          >
+            {hasMoreBelow && (
+              <div className={styles.catListHint}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            )}
             <ul
               ref={catListRef}
               className={styles.catList}
@@ -113,11 +120,10 @@ export default function Sidebar({ categories = [] }: SidebarProps) {
                 </li>
               ))}
             </ul>
-            </div>
-          </section>
-          <div className={styles.divider} />
-        </>
-      )}
+          </div>
+        </section>
+        <div className={styles.divider} />
+      </>
 
       <section className={styles.section}>
         <h3 className={styles.sectionTitle}>정렬</h3>
