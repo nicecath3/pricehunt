@@ -29,7 +29,10 @@ export async function searchNaverShopping(params: {
     next: { revalidate: 300 },
   });
 
-  if (!res.ok) throw new Error(`Naver API error: ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Naver API error: ${res.status} ${body}`);
+  }
 
   return res.json();
 }

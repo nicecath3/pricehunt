@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
       total: Math.min(result.total, 1000),
     });
   } catch (error) {
+    console.error("[/api/search] Naver shopping search failed:", error);
     return NextResponse.json(
       { success: false, error: "검색 중 오류가 발생했습니다." },
       { status: 500 },
